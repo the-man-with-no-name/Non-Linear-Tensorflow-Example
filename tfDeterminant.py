@@ -48,9 +48,8 @@ hidden_layer = tf.keras.layers.Dense(units=2)
 # Now renormalize since e^(log(a) + log(d)) = ad and e^(log(b) + log(c)) = bc
 act2 = tf.keras.layers.Activation(tf.math.exp)
 # Combine the two using one Neuron ad - bc
-hidden_layer2 = tf.keras.layers.Dense(units=2)
 output = tf.keras.layers.Dense(units=1)
-model = tf.keras.Sequential([input_layer, act1, hidden_layer, act2, hidden_layer2, output])
+model = tf.keras.Sequential([input_layer, act1, hidden_layer, act2, output])
 
 # Compile the model and display the architecture
 model.compile(optimizer='adam', loss="mean_squared_error", metrics=['mae','mse'])
@@ -62,8 +61,8 @@ print("Finished training the model.")
 
 # Hopefully we should have 2 parameters on the diagonal or antidiagonal close to 1 
 #   and the other should have 2 parameters close to 0
-print(f"These are the layer 1 variables: {hidden_layer.get_weights()}")
-print(f'These are the layer 2 variables: {hidden_layer2.get_weights()}')
+print(f"These are the layer 1 parameters: {hidden_layer.get_weights()}")
+print(f'These are the layer 2 parameters: {output.get_weights()}')
 
 # Plot the loss magnitude vs (training) epoch number
 # If loss magnitude approaches 0, the model fits the training data very well
