@@ -9,20 +9,16 @@ import matplotlib.pyplot as plt
 train_matrices = []
 train_outputs = []
 for _ in range(500):
-    #temp = np.random.rand(2,2)
     temp = np.random.randint(1,10,size=(2,2))
     train_matrices.append(temp)
-    #train_outputs.append(float(np.linalg.det(temp)))
     train_outputs.append(int(np.linalg.det(temp)))
 
 # Initialize the test matrices
 test_matrices = []
 test_outputs = []
 for _ in range(50):
-    #temp = np.random.rand(2,2)
     temp = np.random.randint(1,10,size=(2,2))
     test_matrices.append(temp)
-    #test_outputs.append(float(np.linalg.det(temp)))
     test_outputs.append(int(np.linalg.det(temp)))
 
 # Tensorflow takes numpy arrays as input
@@ -39,17 +35,19 @@ test_outputs = np.array(test_outputs)
 #  Comments above lines give the reasoning of why we choose the layer sizes and normalizations.
 #    - Note that this can only be done since we have the prior knowledge of a nonlinear formula
 #      for the determinant.
+#    - The combination of the log activation, then a dense layer, then an exp activation 
+#      creates the desired nonlinearity.
 #
 # Flatten the 2x2 matrix to a 4 element array
 input_layer = tf.keras.layers.Flatten(input_shape=(2,2,1))
 # Apply log to data [log(a) log(b) log(c) log(d)]
 act1 = tf.keras.layers.Activation(tf.math.log)
-# Two Neurons needed since log(ad) = log(a) + log(d), log(bc) = log(b) + log(c)
+# Here we hope to have something like log(ad) = log(a) + log(d), log(bc) = log(b) + log(c)
 hidden_layer = tf.keras.layers.Dense(units=2)
 # Now renormalize since e^(log(a) + log(d)) = ad and e^(log(b) + log(c)) = bc
 act2 = tf.keras.layers.Activation(tf.math.exp)
 # Combine the two using one Neuron ad - bc
-hidden_layer2 = tf.keras.layers.Dense(units=1)
+hidden_layer2 = tf.keras.layers.Dense(units=2)
 output = tf.keras.layers.Dense(units=1)
 model = tf.keras.Sequential([input_layer, act1, hidden_layer, act2, hidden_layer2, output])
 
@@ -58,7 +56,7 @@ model.compile(optimizer='adam', loss="mean_squared_error", metrics=['mae','mse']
 print(model.summary())
 
 # Train the model
-history = model.fit(train_matrices, train_outputs, epochs=3000, verbose=True)
+history = model.fit(train_matrices, train_outputs, epochs=1000, verbose=True)
 print("Finished training the model.")
 
 # Hopefully we should have 2 parameters on the diagonal or antidiagonal close to 1 
