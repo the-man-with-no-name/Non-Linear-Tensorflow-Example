@@ -62,7 +62,6 @@ print("Finished training the model.")
 # Hopefully we should have 2 parameters on the diagonal or antidiagonal close to 1 
 #   and the other should have 2 parameters close to 0
 print(f"These are the layer 1 variables: {hidden_layer.get_weights()}")
-# Here we should have 1 parameter close to 1 and the other close to -1
 print(f'These are the layer 2 variables: {hidden_layer2.get_weights()}')
 
 # Plot the loss magnitude vs (training) epoch number
