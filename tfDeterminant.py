@@ -1,5 +1,6 @@
 # Tensorflow to Model Non-linear input interactions
 #   - Determinant of 2x2 matrix
+#!/usr/bin/env python3.8
 
 import tensorflow as tf 
 import math
